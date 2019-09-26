@@ -40,7 +40,7 @@ object TestModels {
       macroMesoAlphaUpdateMax = 0.1,macroMesoBetaUpdateMax = 0.01,mesoMacroCongestionCost = 1.0,mesoMacroDecayUpdateMax = 10.0
     )
 
-    val res = model.modelRun
+    val res = model.modelRun(true)
 
     //println(res)
     //println(res.mesoMorans.sliding(n,n).mkString("\n"))

@@ -3,7 +3,7 @@ val countrycode = "world"
 import java.util.Date
 import java.text.SimpleDateFormat
 
-//logger.level("FINE")
+logger.level("FINE")
 
 val economicMultiplier = Val[Double]
 val sizeEffectOnSupply = Val[Double]
@@ -37,13 +37,21 @@ val model =
     plugins += pluginsOf(urbangrowth.models.marius.SimpleModel),
     inputs += (popFile,distFile,dateFile,economicMultiplier,sizeEffectOnSupply,sizeEffectOnDemand,distanceDecay,id),
     outputs += (economicMultiplier,sizeEffectOnSupply,sizeEffectOnDemand,distanceDecay,id),
-    outputs += (logmse,mselog),
-    popFile := workDirectory / "data"/ "processed" / (countrycode+"_pops.csv"),
-    distFile := workDirectory / "data"/ "processed" / (countrycode+"_dist.csv"),
-    dateFile := workDirectory / "data" /  "processed" / (countrycode+"_dates.csv"),
-    id := 1
+    outputs += (logmse,mselog)
   )
 val modelCapsule = Capsule(model)
+
+val fileSetting = ExplorationTask(
+    (popFile in Seq( workDirectory / "data"/ "processed" / (countrycode+"_pops.csv"))) x
+    (distFile in Seq(workDirectory / "data"/ "processed" / (countrycode+"_dist.csv"))) x
+    (dateFile in Seq(workDirectory / "data" /  "processed" / (countrycode+"_dates.csv"))) x
+    (id in Seq(1))
+) set(
+    inputs += (economicMultiplier,sizeEffectOnSupply,sizeEffectOnDemand,distanceDecay),
+    outputs += (economicMultiplier,sizeEffectOnSupply,sizeEffectOnDemand,distanceDecay)
+)
+
+val eval = fileSetting -< model
 
 
 val modelname = "mariusrestr"
@@ -64,11 +72,11 @@ val evolution =
         sizeEffectOnDemand in Range(0.1, 20.0),
         distanceDecay in Range(0.0, 10.0)
       ),
-      mu = 200,
+      mu = 400,
       objectives = Seq(mselog,logmse),
-      evaluation = model,
+      evaluation = eval,
       termination = 100000,
-      parallelism = 200,
+      parallelism = 1000,
       distribution = Island(10 minutes)
   )
 

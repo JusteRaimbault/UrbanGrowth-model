@@ -3,7 +3,7 @@ val countrycode = "world"
 import java.util.Date
 import java.text.SimpleDateFormat
 
-//logger.level("FINE")
+logger.level("FINE")
 
 val growthRate = Val[Double]
 val gravityWeight = Val[Double]
@@ -62,11 +62,11 @@ val evolution =
         gravityGamma in Range(0.0,10.0),
         gravityDecay in Range(0.1,100000.0)
       ),
-    mu=200,
+    mu=400,
     objectives = Seq(mselog,logmse),
     evaluation = model,
     termination = 100000,
-    parallelism = 200,
+    parallelism = 1000,
     distribution = Island(10 minutes)
 )
 

@@ -99,7 +99,7 @@ case class MultiscaleModel(
     * @param rng
     * @return
     */
-  def modelRun(implicit rng: Random): MultiScaleResult = {
+  def modelRun(fullTimeSeries: Boolean)(implicit rng: Random): MultiScaleResult = {
     def run0(steps: Int,state: MultiscaleState, accumulator: Vector[MultiscaleState]): Vector[MultiscaleState] = steps match{
       case 0 => accumulator
       case s => {
@@ -109,7 +109,7 @@ case class MultiscaleModel(
       }
     }
     val init = initialState
-    MultiScaleResult(run0(timeSteps,init,Vector(init)))
+    MultiScaleResult(run0(timeSteps,init,Vector(init)),fullTimeSeries)
   }
 
 }
@@ -162,6 +162,7 @@ object MultiscaleModel {
 
     assert(mesoStates.map{_.populationGrid.flatten.sum>0}.filter(_==false).size==0,"existing null meso pop grids")
 
+    // note: congestedFlow function in spatialdata computes \sum (flow - lambda flow^2 )
     val utilities = mesoStates.map{s => GridMorphology.congestedFlows(s.populationGrid.map{_.toArray}.toArray,congestionCost)}
 
     assert(utilities.filter(_.isNaN).size==0,"Nan in utilities : "+utilities)

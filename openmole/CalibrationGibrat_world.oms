@@ -3,7 +3,7 @@ val countrycode = "world"
 import java.util.Date
 import java.text.SimpleDateFormat
 
-//logger.level("FINE")
+logger.level("FINE")
 
 val growthRate = Val[Double]
 
@@ -31,12 +31,22 @@ val model =
     plugins += pluginsOf(urbangrowth.models.coevolution.Coevolution),
     inputs += (popFile,dateFile,growthRate,id),
     outputs += (growthRate,id),
-    outputs += (logmse,mselog),
-    popFile := workDirectory / "data"/ "processed" / (countrycode+"_pops.csv"),
-    dateFile := workDirectory / "data"/ "processed" / (countrycode+"_dates.csv"),
-    id := 1
+    outputs += (logmse,mselog)
   )
 val modelCapsule = Capsule(model)
+
+
+val fileSetting = ExplorationTask(
+    (popFile in Seq( workDirectory / "data"/ "processed" / (countrycode+"_pops.csv"))) x
+    (dateFile in Seq(workDirectory / "data"/ "processed" / (countrycode+"_dates.csv"))) x
+    (id in Seq(1))
+  ) set(
+    inputs += (growthRate),
+    outputs += (growthRate)
+  )
+
+val eval = fileSetting -< model
+
 
 val modelname = "gibrat"
 val datestr = (new SimpleDateFormat("yyyyMMdd")).format(new Date()).toString
@@ -53,11 +63,11 @@ val evolution =
       Seq(
         growthRate in Range(0.0, 0.1)
       ),
-      mu = 200,
+      mu = 400,
       objectives = Seq(mselog,logmse),
-      evaluation = model,
+      evaluation = eval,
       termination = 100000,
-      parallelism = 200,
+      parallelism = 1000,
       distribution = Island(10 minutes)
 )
 
