@@ -1,0 +1,40 @@
+
+val datafile = Val[File]
+val outfile = Val[File]
+val headerfile = Val[File]
+
+val filterResultFile = ScalaTask("""
+    | import scalaz.stream._
+    | import scalaz.concurrent.Task
+    | 
+    | val params = Seq("macroGrowthRate","macroInteractionDecay","macroInteractionGamma","mesoAlpha","mesoBeta","mesoTimeSteps","macroMesoAlphaUpdateMax","macroMesoBetaUpdateMax","mesoMacroCongestionCost","mesoMacroDecayUpdateMax")
+    | val macroindics = Seq("macroAccessibilities","macroClosenesses","macroPopulations")
+    | val mesoindics = Seq("mesoSlopes","mesoMorans","mesoEntropy","mesoDistances")
+    | val ncities = 20
+    | val tsteps = 20
+    | val macrocols = macroindics.map{macroindic => ((0 to (ncities - 1) by 1).toSeq.map{t => macroindic+t.toString})++(((ncities*tsteps) to (ncities*(tsteps+1) - 1) by 1).toSeq.map{t => macroindic+t.toString})}.flatten
+    | val mesocols = mesoindics.map{mesoindic => ((0 to (ncities - 1) by 1).toSeq.map{t => mesoindic+t.toString})++(((ncities*tsteps) to (ncities*(tsteps+1) - 1) by 1).toSeq.map{t => mesoindic+t.toString})}.flatten
+    | val cols = params++macrocols++mesocols
+    |
+    | def rowfilter(line: String,header: Seq[String]): String = line.split(",").toSeq.zip(header).filter{case (c,h)=>cols.contains(h)}.mkString(",")
+    | //val header: Seq[String] = io.linesR("input.csv").take(1).map{_.split(",").toSeq}.toSeq.flatten 
+    | val header = scala.io.Source.fromFile(workDirectory / "header.csv").getLines().toSeq.head.split(",")
+    | println(header)
+    | val process: Task[Unit] = io.linesR("input.csv").map(r => rowfilter(r,header)).intersperse("\n").pipe(text.utf8Encode).to(io.fileChunkW("output.csv")).run
+    | val outfile = File("output.csv")
+    """.stripMargin
+) set (
+    libraries += workDirectory / "lib" / "scalaz-stream_2.12-0.8.6.jar",
+    libraries += workDirectory / "lib" / "scalaz-concurrent_2.12-7.3.0-M27.jar",
+    libraries += workDirectory / "lib" / "scodec-bits_2.12-1.1.12.jar",
+    libraries += workDirectory / "lib" / "scalaz-core_2.12-7.3.0-M27.jar",
+    libraries += workDirectory / "lib" / "scalaz-effect_2.12-7.3.0-M27.jar",
+    inputFiles += (datafile, "inputs.csv"),
+    inputFiles += (headerfile, "header.csv"),
+    outputs += (outfile),
+    datafile := workDirectory / "exploration" / "20190926_114834_MULTISCALE_LHS_TEST.csv",
+    headerfile := workDirectory / "exploration" / "header.csv"
+)
+
+filterResultFile hook CopyFileHook(outfile,workDirectory / "exploration" / "20190926_114834_MULTISCALE_LHS_TEST_filtered.csv")
+

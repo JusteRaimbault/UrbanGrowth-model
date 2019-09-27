@@ -50,7 +50,7 @@ object MultiScaleResult {
     val morphologies: Vector[(Double,Double,Double,Double,Double)] = states.flatMap{_.mesoStates.map{_.morphology}}
     val macroIndics: Vector[(Vector[Double],Vector[Double],Vector[Double])] = states.map{_.macroState.indicators}
     MultiScaleResult(
-      rawStates,
+      states,
       macroIndics.flatMap(_._1),
       macroIndics.flatMap(_._2),
       macroIndics.flatMap(_._3),
@@ -59,8 +59,8 @@ object MultiScaleResult {
       morphologies.map(_._3),
       morphologies.map(_._4),
       morphologies.map(_._5),
-      rawStates.flatMap(_.macroState.congestedFlows),
-      rawStates.flatMap(_.mesoStates.map(_.missingPopulation)),
+      states.flatMap(_.macroState.congestedFlows),
+      states.flatMap(_.mesoStates.map(_.missingPopulation)),
       fulltrajs
     )
   }
