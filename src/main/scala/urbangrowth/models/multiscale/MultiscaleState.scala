@@ -1,5 +1,6 @@
 package urbangrowth.models.multiscale
 
+import org.openmole.spatialdata.utils.math.Statistics
 import urbangrowth.models._
 
 case class MultiscaleState(
@@ -35,12 +36,31 @@ case class MultiScaleResult(
                            mesoSlopeRsquared: Vector[Double],
                            mesoCongestedFlows: Vector[Double],
                            mesoMissingPopulations: Vector[Double],
-                           fullTrajectories: Boolean
+                           fullTrajectories: Boolean,
+                           timesteps: Int,
+                           cities: Int
                            ) {
   def asArrayTuple =  (macroPopulations.toArray,macroClosenesses.toArray,macroAccessibilities.toArray,
     mesoMorans.toArray,mesoDistances.toArray,mesoEntropy.toArray,mesoSlopes.toArray,mesoSlopeRsquared.toArray,
     mesoCongestedFlows.toArray,mesoMissingPopulations.toArray
   )
+
+
+  /**
+    * Returns: Macro : hierarchy of populations, average closeness ? -> depends only on dG, average access ? (how the system is balanced -> idem)
+    *  Meso : limit sprawl but also aggregation (not too dense)
+    *   could try to minimize congestion? ~ no traffic model at the meso scale - would not make much sense
+    */
+  def summaryIndicators: (Double,Double,Double) = {
+    // whatever the initial hierarchy (constant in the synthetic context), should be minimized
+    val popMacroHierarchy = Statistics.slope(macroPopulations.takeRight(cities).toArray)._1
+    val averageMesoAggregation = mesoSlopes.takeRight(cities).sum / cities.toDouble
+    val averageMesoDistance = mesoDistances.takeRight(cities).sum / cities.toDouble
+    (popMacroHierarchy,averageMesoAggregation,averageMesoDistance)
+  }
+
+
+
 }
 
 object MultiScaleResult {
@@ -61,7 +81,9 @@ object MultiScaleResult {
       morphologies.map(_._5),
       states.flatMap(_.macroState.congestedFlows),
       states.flatMap(_.mesoStates.map(_.missingPopulation)),
-      fulltrajs
+      fulltrajs,
+      rawStates.length,
+      macroIndics.head._1.length
     )
   }
 
