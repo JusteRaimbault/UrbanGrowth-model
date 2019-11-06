@@ -73,10 +73,10 @@ NSGA2Evolution(
       mesoBeta in Range(0.0,0.1),
       mesoNdiff in Range(1.0,5.0),
       mesoTimeSteps in Range(1.0,20.0),
-      macroMesoAlphaUpdateMax in Range(-0.1,0.1),
-      macroMesoBetaUpdateMax in Range(-0.1,0.1),
+      macroMesoAlphaUpdateMax in Range(-0.2,0.2),
+      macroMesoBetaUpdateMax in Range(-0.2,0.2),
       mesoMacroCongestionCost in Range(0.5,2.0),
-      mesoMacroDecayUpdateMax in Range(-0.1,0.1)
+      mesoMacroDecayUpdateMax in Range(-0.2,0.2)
     ),
       objectives = Seq(macroHierarchy,mesoAggregation,mesoDistance),
       stochastic = Stochastic(seed = replication),
