@@ -76,7 +76,7 @@ val purpose = "MULTISCALE_TARGETEDGRID_GRID"
 val env = EGIEnvironment("vo.complex-systems.eu")
 //val env = LocalEnvironment(10)
 
-val indics_hook = AppendToCSVFileHook(workDirectory / "exploration" / ((new java.text.SimpleDateFormat("yyyyMMdd_HHmmss")).format(new java.util.Date()))+"_"+purpose+".csv") set (arraysOnSingleRow := true)
+val indics_hook = AppendToCSVFileHook(workDirectory / "exploration" / (((new java.text.SimpleDateFormat("yyyyMMdd_HHmmss")).format(new java.util.Date()))+"_"+purpose+".csv")) set (arraysOnSingleRow := true)
 
 
 
