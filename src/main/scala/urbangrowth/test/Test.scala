@@ -6,8 +6,6 @@ import java.io.File
 import Jama.Matrix
 
 import urbangrowth._
-import urbangrowth.indicators.Indicators
-import urbangrowth.models.innovation.Innovation
 import urbangrowth.models.multiscale._
 
 import scala.collection.mutable.ArrayBuffer

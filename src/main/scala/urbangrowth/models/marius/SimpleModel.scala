@@ -3,12 +3,12 @@ package urbangrowth.models.marius
 
 import java.io.File
 
-import Jama.Matrix
+import org.openmole.spatialdata.model.urbandynamics.{MacroModel, MacroResult}
+import org.openmole.spatialdata.utils.math.Matrix
 import urbangrowth.indicators._
 
 import scala.collection.mutable.ArrayBuffer
 
-import urbangrowth.models.MacroModel
 
 /** Simple model with only core mechanisms */
 case class SimpleModel(
@@ -32,7 +32,7 @@ case class SimpleModel(
    "\n\tsizeEffectOnDemand = "+sizeEffectOnDemand+"\n\tdistanceDecay = "+distanceDecay+"\n\twealthToPopulationExponent = "+wealthToPopulationExponent+
    "\n\tpopulationToWealthExponent = "+populationToWealthExponent
 
-  def run(): Result = SimpleModel.run(this)
+  def run(): MacroResult = SimpleModel.run(this)
 
 }
 
@@ -54,7 +54,7 @@ object SimpleModel {
       sizeEffectOnDemand, distanceDecay, wealthToPopulationExponent, populationToWealthExponent)
 
 
-  def run(model: SimpleModel): Result = {
+  def run(model: SimpleModel): MacroResult = {
     println("Running "+model.toString)
     val populations: ArrayBuffer[Array[Double]] = new ArrayBuffer[Array[Double]]
     for {
@@ -66,10 +66,11 @@ object SimpleModel {
         _.population
       }.toArray)
     }
-    val popMatrix: Matrix = new Matrix(populations.toArray).transpose()
+    val popMatrix: Matrix = Matrix(populations.toArray)(Matrix.defaultImplementation).transpose
+    val realPopMatrix =  Matrix(model.configuration.realPopulations.getArray)(Matrix.defaultImplementation)
     //println("Simulated : "+popMatrix.getRowDimension+" x "+popMatrix.getColumnDimension)
     //println("Target : "+model.configuration.realPopulations.getRowDimension+" x "+model.configuration.realPopulations.getColumnDimension)
-    Result(model.configuration.realPopulations,popMatrix)
+    MacroResult(realPopMatrix,popMatrix)
   }
 
 

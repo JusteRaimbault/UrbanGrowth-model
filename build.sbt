@@ -1,4 +1,4 @@
-scalaVersion := "2.12.6"
+scalaVersion := "2.13.1"
 
 name := "urbangrowth"
 
@@ -18,13 +18,19 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("snapshots"),
   Resolver.sonatypeRepo("staging"),
   Resolver.mavenCentral,
-  Resolver.file("Local ivy", file( (new java.io.File("~")).getAbsolutePath+"/.ivy2"))(Resolver.ivyStylePatterns)
+  "osgeo" at "https://download.osgeo.org/webdav/geotools",
+  "geosolutions" at "https://maven.geo-solutions.it",
+  "geotoolkit" at "https://maven.geotoolkit.org"
 )
 
 
+val geotoolsVersion = "21.0"
+
 libraryDependencies ++= Seq(
   "gov.nist.math" % "jama" % "1.0.3",
-  "org.openmole" % "spatialdata_2.12" % "0.1-SNAPSHOT"
+  "org.openmole.library" %% "spatialdata" % "0.4-SNAPSHOT",
+  "org.geotools" % "geotools" % geotoolsVersion exclude("javax.media", "jai_core") exclude("com.vividsolutions", "jts-core"),
+  "org.geotools" % "gt-shapefile" % geotoolsVersion exclude("javax.media", "jai_core") exclude("com.vividsolutions", "jts-core")
 )
 
 //libraryDependencies += "org.geotools" % "gt-referencing" % "9.3"

@@ -37,6 +37,8 @@ object FileUtils {
     res.toArray
   }
 
+  /*
+  // use spatialdata io
   def exportCSV(f: File,m: Matrix,delimiter: String = ","): Unit ={
     val writer = new BufferedWriter(new FileWriter(f))
     m.getArray.foreach{
@@ -44,7 +46,7 @@ object FileUtils {
         writer.write(row.map{case d => String.format("%f",d.asInstanceOf[AnyRef])}.mkString(delimiter));writer.newLine()
     }
     writer.close()
-  }
+  }*/
 
 }
 
