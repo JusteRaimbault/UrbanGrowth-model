@@ -9,9 +9,9 @@ object TestModel {
     new File("data/processed/BR_dist.csv"),
     new File( "data/processed/BR_pops.csv"),
     new File("data/processed/BR_dates.csv"),
-    economicMultiplier= 5.9059803,
-    sizeEffectOnSupply =3.60315698509,
-    sizeEffectOnDemand=3.30481631293628,
+    economicMultiplier= 1.0, //5.9059803,
+    sizeEffectOnSupply= 0.1, //3.60315698509,
+    sizeEffectOnDemand= 0.3,//3.30481631293628,
     distanceDecay=1.698876633327205,
     wealthToPopulationExponent=1.18720491738353,
     populationToWealthExponent=1.1140844912

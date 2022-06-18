@@ -7,6 +7,7 @@ import Jama.Matrix
 
 import urbangrowth._
 import urbangrowth.models.multiscale._
+import urbangrowth.models.innovation._
 
 import scala.collection.mutable.ArrayBuffer
 import scala.util.Random
@@ -14,9 +15,9 @@ import scala.util.Random
 
 object Test extends App {
 
-  TestModels.testMultiScale()
+  //TestModels.testMultiScale()
   //TestModels.testInnovation()
-  //TestModels.testMarius()
+  TestModels.testMarius()
   //TestModels.testIntGib()
 
 }
@@ -38,13 +39,13 @@ object TestModels {
       macroMesoAlphaUpdateMax = 0.1,macroMesoBetaUpdateMax = 0.01,mesoMacroCongestionCost = 1.0,mesoMacroDecayUpdateMax = 10.0
     )
 
-    val res = model.modelRun(true)
+    //val res = model.modelRun(true)
 
     //println(res)
     //println(res.mesoMorans.sliding(n,n).mkString("\n"))
     // deltapops <-> NaNs ?
-    log(res.macroPopulations.sliding(n,n).mkString("\n"))
-    log(res.mesoMorans.sliding(n,n).mkString("\n"))
+    //log(res.macroPopulations.sliding(n,n).mkString("\n"))
+    //log(res.mesoMorans.sliding(n,n).mkString("\n"))
     //log(res.mesoCongestedFlows.sliding(n,n).mkString("\n"))
   }
 
@@ -59,7 +60,8 @@ object TestModels {
     val rng = new scala.util.Random
     //val model = Innovation(pop,dists,dates,rng.nextInt,0.02,0.0001,200.0,50.0)
     //val model = Innovation(pop,dists,dates,rng.nextInt,0.02,0.0001,200.0,50.0,1.0,2.0,0.5,5.0,0.1)
-    val model = Innovation(pop,dists,dates,
+
+    /*val model = Innovation(pop,dists,dates,
       seed = -1161271605,
       growthRate = 0.01284419236844148,
       innovationWeight = 0.042505126533442794,
@@ -69,7 +71,9 @@ object TestModels {
 
     val res = model.run()
     println(res)
+  */
   }
+
 
 
   def testMarius(): Unit = {
@@ -87,7 +91,7 @@ object TestModels {
   def testIntGib():Unit = {
 
     import urbangrowth.models.coevolution.Coevolution
-    import urbangrowth.indicators.Indicators
+    //import urbangrowth.indicators.Indicators
 
     //val pop = new File("data/coevolution/interactiongibrat/pop50.csv")
     val pop = new File("data/processed/BR_pops.csv")
@@ -97,7 +101,7 @@ object TestModels {
     val fdists = null
     //val fdates = new File("data/coevolution/interactiongibrat/dates.csv")
     val fdates = new File("data/processed/BR_dates.csv")
-    val model = Coevolution(pop, dists, fdists, fdates,0.02, 0.0015, 2.0, 500.0, 0.0, 2.0, 50.0)
+    //val model = Coevolution(pop, dists, fdists, fdates,0.02, 0.0015, 2.0, 500.0, 0.0, 2.0, 50.0)
 
     //var res: Matrix = null
     //for (decay <- 10.0 to 200.0 by 10.0) {
@@ -112,9 +116,9 @@ object TestModels {
     println(sqdiff.getArray().flatten.sum)
     */
 
-    val res = model.run()
+    //val res = model.run()
 
-    println(res)
+    //println(res)
     //println(Indicators.logmse(res,model.populationMatrix))
     //println(Indicators.mselog(res,model.populationMatrix))
 

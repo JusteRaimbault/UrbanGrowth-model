@@ -18,7 +18,7 @@ resolvers ++= Seq(
   Resolver.sonatypeRepo("snapshots"),
   Resolver.sonatypeRepo("staging"),
   Resolver.mavenCentral,
-  "osgeo" at "https://download.osgeo.org/webdav/geotools",
+  "osgeo" at "https://repo.osgeo.org/repository/geotools-releases",
   "geosolutions" at "https://maven.geo-solutions.it",
   "geotoolkit" at "https://maven.geotoolkit.org"
 )

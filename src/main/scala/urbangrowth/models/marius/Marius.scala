@@ -165,6 +165,7 @@ trait Marius {
     (state.cities zip supplies zip demands zip exchangeBalances(state.cities, state.network, supplies, demands)).zipWithIndex.map {
       case ((((city, supply), demand), b), i) =>
         val newWealth = city.wealth + supply - demand + b
+        println(s"${city.wealth} + $supply - $demand + $b = $newWealth")
         if (city.wealth <= 0.0 || newWealth <= 0.0) 0.0 else newWealth
     }
   }
